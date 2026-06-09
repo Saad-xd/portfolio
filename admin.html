@@ -212,18 +212,31 @@ main{padding:32px 40px;overflow-y:auto}
 
     <div class="panel">
       <div class="panel-title">Profile Photo</div>
-      <div class="form-row full">
-        <div class="field">
-          <label>Photo URL</label>
-          <input id="f-photoUrl" placeholder="https://..." oninput="markDirty(); previewPhoto()">
-          <span style="font-size:11px;color:var(--text3);margin-top:5px;display:block">
-            الصق رابط صورتك من LinkedIn أو أي موقع — مثلاً كليك يمين على الصورة ← Copy image address
-          </span>
+      
+      <div style="display:flex;gap:10px;margin-bottom:16px">
+        <button class="btn btn-primary" onclick="document.getElementById('photo-upload-input').click()">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" style="vertical-align:-1px;margin-right:5px"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          Upload Photo
+        </button>
+        <span style="color:var(--text3);font-size:12px;align-self:center">أو</span>
+        <div class="field" style="flex:1;margin:0">
+          <input id="f-photoUrl" placeholder="رابط صورة من الإنترنت..." oninput="markDirty(); previewPhoto()" style="margin:0">
         </div>
       </div>
-      <div id="photo-preview-wrap" style="display:none;margin-top:12px">
+
+      <input type="file" id="photo-upload-input" accept="image/*" style="display:none" onchange="handlePhotoUpload(this)">
+
+      <div id="photo-convert-progress" style="display:none;font-size:12px;color:var(--accent);margin-bottom:10px">
+        ⏳ Converting image...
+      </div>
+
+      <div id="photo-preview-wrap" style="display:none;align-items:center;gap:12px;margin-top:8px">
         <img id="photo-preview" src="" style="width:72px;height:72px;border-radius:50%;object-fit:cover;border:2px solid rgba(0,212,255,0.3)">
-        <span style="font-size:11px;color:var(--green);margin-left:10px;vertical-align:middle">✓ Photo ready</span>
+        <div>
+          <div style="font-size:12px;color:var(--green);font-weight:600">✓ Photo ready</div>
+          <div id="photo-size-info" style="font-size:11px;color:var(--text3);margin-top:3px"></div>
+          <button class="btn btn-danger btn-sm" style="margin-top:8px" onclick="removePhoto()">Remove photo</button>
+        </div>
       </div>
     </div>
       <div class="form-row full">
@@ -461,12 +474,60 @@ let dirty = false;
 function getData(){ return JSON.parse(localStorage.getItem(KEY)||'null') || JSON.parse(JSON.stringify(DEFAULT)); }
 function setData(d){ localStorage.setItem(KEY, JSON.stringify(d)); }
 
+function handlePhotoUpload(input){
+  const file = input.files[0];
+  if(!file) return;
+  const progress = document.getElementById('photo-convert-progress');
+  progress.style.display = 'block';
+  const reader = new FileReader();
+  reader.onload = function(e){
+    const img = new Image();
+    img.onload = function(){
+      // Resize to max 400x400 using canvas
+      const canvas = document.createElement('canvas');
+      const max = 400;
+      let w = img.width, h = img.height;
+      if(w > h){ if(w>max){h=Math.round(h*max/w);w=max;} }
+      else { if(h>max){w=Math.round(w*max/h);h=max;} }
+      canvas.width=w; canvas.height=h;
+      canvas.getContext('2d').drawImage(img,0,0,w,h);
+      const b64 = canvas.toDataURL('image/jpeg', 0.85);
+      // Save to data
+      data.profile.photoUrl = b64;
+      document.getElementById('f-photoUrl').value = '';
+      showPhotoPreview(b64, Math.round(b64.length/1024) + ' KB');
+      progress.style.display = 'none';
+      markDirty();
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+  input.value = '';
+}
+
+function removePhoto(){
+  data.profile.photoUrl = '';
+  document.getElementById('f-photoUrl').value = '';
+  document.getElementById('photo-preview-wrap').style.display = 'none';
+  markDirty();
+}
+
+function showPhotoPreview(src, sizeInfo){
+  const wrap = document.getElementById('photo-preview-wrap');
+  document.getElementById('photo-preview').src = src;
+  document.getElementById('photo-size-info').textContent = sizeInfo || '';
+  wrap.style.display = 'flex';
+}
+
 function previewPhoto(){
   const url = document.getElementById('f-photoUrl').value.trim();
-  const wrap = document.getElementById('photo-preview-wrap');
-  const img = document.getElementById('photo-preview');
-  if(url){ img.src=url; wrap.style.display='flex'; wrap.style.alignItems='center'; }
-  else { wrap.style.display='none'; }
+  if(url){
+    data.profile.photoUrl = url;
+    showPhotoPreview(url, 'External URL');
+    markDirty();
+  } else {
+    document.getElementById('photo-preview-wrap').style.display = 'none';
+  }
 }
 
 function loadData(){
@@ -496,7 +557,8 @@ function fillProfile(){
   const cvStatus = document.getElementById('cv-status');
   if(cvStatus) cvStatus.style.display = p.cvFile ? 'block' : 'none';
   // Photo preview
-  previewPhoto();
+  if(p.photoUrl) showPhotoPreview(p.photoUrl, p.photoUrl.startsWith('data:') ? Math.round(p.photoUrl.length/1024)+' KB (embedded)' : 'External URL');
+  else document.getElementById('photo-preview-wrap').style.display = 'none';
 }
 
 function fillContact(){
@@ -711,12 +773,14 @@ function markDirty(){
 
 function saveAll(){
   const p = data.profile;
+  const savedPhoto = data.profile.photoUrl; // preserve base64 photo
   ['name','role','location','company','companyPeriod','gpa','university','degree','about1','about2',
    'stat1','stat1label','stat2','stat2label','stat3','stat3label',
    'github','linkedin','email','whatsapp','cvFile','photoUrl'].forEach(k=>{
     const el = document.getElementById('f-'+k);
-    if(el) p[k] = el.value;
+    if(el && el.value) p[k] = el.value;
   });
+  if(!p.photoUrl && savedPhoto) p.photoUrl = savedPhoto; // restore if input was empty
   setData(data);
   dirty = false;
   document.getElementById('save-bar').classList.remove('visible');
