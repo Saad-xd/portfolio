@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Portfolio Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0A0E17;--bg2:#0F1420;--card:#161C2D;
+  --border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.13);
+  --accent:#00D4FF;--accent-dim:rgba(0,212,255,0.08);--accent-mid:rgba(0,212,255,0.18);
+  --text:#F0F4FF;--text2:#8A94A8;--text3:#5A6278;
+  --green:#00E5A0;--red:#FF5C5C;--amber:#FFB547;
+  --font-d:'Space Grotesk',sans-serif;--font-b:'Inter',sans-serif;
+  --r:10px;
+}
+body{background:var(--bg);color:var(--text);font-family:var(--font-b);font-size:14px;line-height:1.6;min-height:100vh}
+/* LAYOUT */
+.shell{display:grid;grid-template-columns:220px 1fr;min-height:100vh}
+/* SIDEBAR */
+aside{background:var(--bg2);border-right:0.5px solid var(--border);padding:24px 0;display:flex;flex-direction:column;position:sticky;top:0;height:100vh;overflow-y:auto}
+.logo{font-family:var(--font-d);font-size:18px;font-weight:700;padding:0 20px 24px;border-bottom:0.5px solid var(--border);margin-bottom:16px}
+.logo span{color:var(--accent)}
+.nav-item{display:flex;align-items:center;gap:10px;padding:10px 20px;cursor:pointer;color:var(--text2);font-size:13px;font-weight:500;transition:all .15s;border-left:2px solid transparent}
+.nav-item:hover{color:var(--text);background:rgba(255,255,255,0.03)}
+.nav-item.active{color:var(--accent);border-left-color:var(--accent);background:var(--accent-dim)}
+.nav-icon{width:16px;height:16px;stroke:currentColor;fill:none;flex-shrink:0}
+.sidebar-footer{margin-top:auto;padding:16px 20px;border-top:0.5px solid var(--border)}
+.preview-btn{display:block;text-align:center;background:var(--accent);color:#000;font-size:12px;font-weight:600;padding:9px;border-radius:7px;text-decoration:none;transition:opacity .2s}
+.preview-btn:hover{opacity:.85}
+/* MAIN */
+main{padding:32px 40px;overflow-y:auto}
+.page{display:none}
+.page.active{display:block}
+.page-header{margin-bottom:28px}
+.page-title{font-family:var(--font-d);font-size:22px;font-weight:700;margin-bottom:4px}
+.page-sub{font-size:13px;color:var(--text3)}
+/* CARDS */
+.panel{background:var(--card);border:0.5px solid var(--border);border-radius:var(--r);padding:24px;margin-bottom:16px}
+.panel-title{font-size:12px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--accent);margin-bottom:16px}
+/* FORM */
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+.form-row.full{grid-template-columns:1fr}
+.field{display:flex;flex-direction:column;gap:5px}
+.field label{font-size:11px;font-weight:600;color:var(--text3);letter-spacing:.5px;text-transform:uppercase}
+.field input,.field textarea,.field select{
+  background:rgba(255,255,255,0.04);border:0.5px solid var(--border2);
+  border-radius:7px;color:var(--text);font-family:var(--font-b);font-size:13px;
+  padding:9px 12px;outline:none;transition:border-color .2s;
+}
+.field input:focus,.field textarea:focus{border-color:var(--accent)}
+.field textarea{resize:vertical;min-height:80px}
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;padding:8px 16px;border-radius:7px;border:none;cursor:pointer;transition:all .15s;font-family:var(--font-b)}
+.btn-primary{background:var(--accent);color:#000}
+.btn-primary:hover{opacity:.88}
+.btn-ghost{background:transparent;border:0.5px solid var(--border2);color:var(--text2)}
+.btn-ghost:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-dim)}
+.btn-danger{background:rgba(255,92,92,0.12);border:0.5px solid rgba(255,92,92,0.25);color:var(--red)}
+.btn-danger:hover{background:rgba(255,92,92,0.2)}
+.btn-sm{padding:5px 10px;font-size:11px}
+/* SAVE BAR */
+.save-bar{
+  position:fixed;bottom:24px;right:32px;
+  background:var(--card);border:0.5px solid var(--border2);
+  border-radius:10px;padding:12px 18px;
+  display:flex;align-items:center;gap:12px;
+  box-shadow:0 4px 24px rgba(0,0,0,0.4);
+  transform:translateY(80px);opacity:0;
+  transition:all .3s;pointer-events:none;z-index:99;
+}
+.save-bar.visible{transform:translateY(0);opacity:1;pointer-events:all}
+.save-status{font-size:12px;color:var(--text2)}
+/* LISTS */
+.list-item{
+  display:flex;align-items:center;gap:12px;
+  padding:12px 14px;border-radius:8px;
+  border:0.5px solid var(--border);background:rgba(255,255,255,0.02);
+  margin-bottom:8px;
+}
+.list-item-body{flex:1;min-width:0}
+.list-item-title{font-size:13px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.list-item-sub{font-size:11px;color:var(--text3);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.list-item-actions{display:flex;gap:6px;flex-shrink:0}
+/* TAGS editor */
+.tags-editor{display:flex;flex-wrap:wrap;gap:6px;padding:10px;background:rgba(255,255,255,0.03);border:0.5px solid var(--border2);border-radius:7px;min-height:44px}
+.tag-pill{display:inline-flex;align-items:center;gap:5px;background:var(--accent-dim);border:0.5px solid rgba(0,212,255,0.2);color:var(--accent);font-size:11px;font-weight:500;padding:3px 8px;border-radius:100px}
+.tag-pill button{background:none;border:none;color:inherit;cursor:pointer;line-height:1;padding:0;font-size:13px;opacity:.7}
+.tag-pill button:hover{opacity:1}
+.tag-add-row{display:flex;gap:8px;margin-top:8px}
+.tag-add-row input{flex:1;background:rgba(255,255,255,0.04);border:0.5px solid var(--border2);border-radius:6px;color:var(--text);font-size:12px;padding:7px 10px;outline:none}
+.tag-add-row input:focus{border-color:var(--accent)}
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:200;display:flex;align-items:center;justify-content:center;padding:20px}
+.modal-overlay.hidden{display:none}
+.modal{background:var(--bg2);border:0.5px solid var(--border2);border-radius:14px;padding:28px;width:100%;max-width:560px;max-height:85vh;overflow-y:auto}
+.modal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+.modal-title{font-family:var(--font-d);font-size:16px;font-weight:700}
+.modal-close{background:none;border:none;color:var(--text2);cursor:pointer;font-size:20px;line-height:1}
+/* TOAST */
+.toast{position:fixed;top:24px;right:32px;background:var(--green);color:#000;font-size:12px;font-weight:600;padding:10px 18px;border-radius:8px;z-index:300;transform:translateY(-60px);opacity:0;transition:all .3s}
+.toast.show{transform:translateY(0);opacity:1}
+/* IMG PREVIEW */
+.img-preview{width:100%;height:120px;object-fit:cover;border-radius:7px;margin-top:8px;display:none}
+.img-preview.visible{display:block}
+.img-placeholder-box{width:100%;height:80px;border:1px dashed rgba(0,212,255,0.2);border-radius:7px;display:flex;align-items:center;justify-content:center;color:var(--text3);font-size:11px;margin-top:8px;cursor:pointer;transition:border-color .2s}
+.img-placeholder-box:hover{border-color:rgba(0,212,255,0.5);color:var(--accent)}
+/* STAT CARDS */
+.stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:24px}
+.stat-card{background:var(--card);border:0.5px solid var(--border);border-radius:var(--r);padding:16px;text-align:center}
+.stat-num{font-family:var(--font-d);font-size:26px;font-weight:700;color:var(--accent)}
+.stat-lbl{font-size:11px;color:var(--text3);margin-top:4px}
+/* DIVIDER */
+.divider{height:0.5px;background:var(--border);margin:20px 0}
+</style>
+</head>
+<body>
+
+<div class="shell">
+
+<!-- SIDEBAR -->
+<aside>
+  <div class="logo">Admin<span>.</span></div>
+  <div class="nav-item active" onclick="showPage('profile')">
+    <svg class="nav-icon" viewBox="0 0 24 24" stroke-width="1.8"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+    Profile
+  </div>
+  <div class="nav-item" onclick="showPage('projects')">
+    <svg class="nav-icon" viewBox="0 0 24 24" stroke-width="1.8"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+    Projects
+  </div>
+  <div class="nav-item" onclick="showPage('skills')">
+    <svg class="nav-icon" viewBox="0 0 24 24" stroke-width="1.8"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+    Skills
+  </div>
+  <div class="nav-item" onclick="showPage('certifications')">
+    <svg class="nav-icon" viewBox="0 0 24 24" stroke-width="1.8"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"/></svg>
+    Certifications
+  </div>
+  <div class="nav-item" onclick="showPage('contact')">
+    <svg class="nav-icon" viewBox="0 0 24 24" stroke-width="1.8"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+    Contact
+  </div>
+  <div class="sidebar-footer">
+    <a href="portfolio.html" target="_blank" class="preview-btn">Open Portfolio ↗</a>
+    <p style="font-size:10px;color:var(--text3);margin-top:10px;text-align:center;line-height:1.5">Both files must be in the same folder for live sync to work</p>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<main>
+
+  <!-- ── PROFILE PAGE ── -->
+  <div class="page active" id="page-profile">
+    <div class="page-header">
+      <div class="page-title">Profile</div>
+      <div class="page-sub">Your personal information shown in the hero and about sections</div>
+    </div>
+
+    <div class="stat-grid">
+      <div class="stat-card">
+        <div class="stat-num" id="s-stat1">—</div>
+        <div class="stat-lbl" id="s-stat1l">—</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" id="s-stat2">—</div>
+        <div class="stat-lbl" id="s-stat2l">—</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" id="s-stat3">—</div>
+        <div class="stat-lbl" id="s-stat3l">—</div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title">Hero Stats</div>
+      <div class="form-row">
+        <div class="field"><label>Stat 1 Value</label><input id="f-stat1" placeholder="103+" oninput="markDirty()"></div>
+        <div class="field"><label>Stat 1 Label</label><input id="f-stat1l" placeholder="Sites maintained" oninput="markDirty()"></div>
+      </div>
+      <div class="form-row">
+        <div class="field"><label>Stat 2 Value</label><input id="f-stat2" placeholder="20+" oninput="markDirty()"></div>
+        <div class="field"><label>Stat 2 Label</label><input id="f-stat2l" placeholder="Solar sites deployed" oninput="markDirty()"></div>
+      </div>
+      <div class="form-row">
+        <div class="field"><label>Stat 3 Value</label><input id="f-stat3" placeholder="3.53" oninput="markDirty()"></div>
+        <div class="field"><label>Stat 3 Label</label><input id="f-stat3l" placeholder="University GPA" oninput="markDirty()"></div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title">Personal Info</div>
+      <div class="form-row">
+        <div class="field"><label>Full Name</label><input id="f-name" oninput="markDirty()"></div>
+        <div class="field"><label>Job Title</label><input id="f-role" oninput="markDirty()"></div>
+      </div>
+      <div class="form-row">
+        <div class="field"><label>Location</label><input id="f-location" oninput="markDirty()"></div>
+        <div class="field"><label>Company</label><input id="f-company" oninput="markDirty()"></div>
+      </div>
+      <div class="form-row">
+        <div class="field"><label>Company Period</label><input id="f-companyPeriod" oninput="markDirty()"></div>
+        <div class="field"><label>GPA</label><input id="f-gpa" oninput="markDirty()"></div>
+      </div>
+      <div class="form-row">
+        <div class="field"><label>University</label><input id="f-university" oninput="markDirty()"></div>
+        <div class="field"><label>Degree</label><input id="f-degree" oninput="markDirty()"></div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title">About Section Text</div>
+      <div class="form-row full">
+        <div class="field"><label>Paragraph 1</label><textarea id="f-about1" rows="3" oninput="markDirty()"></textarea></div>
+      </div>
+      <div class="form-row full">
+        <div class="field"><label>Paragraph 2</label><textarea id="f-about2" rows="3" oninput="markDirty()"></textarea></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── PROJECTS PAGE ── -->
+  <div class="page" id="page-projects">
+    <div class="page-header">
+      <div class="page-title">Projects</div>
+      <div class="page-sub">Add, edit, or remove portfolio projects</div>
+    </div>
+    <div style="margin-bottom:16px">
+      <button class="btn btn-primary" onclick="openProjectModal()">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Add Project
+      </button>
+    </div>
+    <div id="projects-list"></div>
+  </div>
+
+  <!-- ── SKILLS PAGE ── -->
+  <div class="page" id="page-skills">
+    <div class="page-header">
+      <div class="page-title">Skills</div>
+      <div class="page-sub">Manage skill groups and individual tags</div>
+    </div>
+    <div style="margin-bottom:16px">
+      <button class="btn btn-primary" onclick="openSkillModal()">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Add Skill Group
+      </button>
+    </div>
+    <div id="skills-list"></div>
+  </div>
+
+  <!-- ── CERTIFICATIONS PAGE ── -->
+  <div class="page" id="page-certifications">
+    <div class="page-header">
+      <div class="page-title">Certifications</div>
+      <div class="page-sub">Your credentials and certificates</div>
+    </div>
+    <div style="margin-bottom:16px">
+      <button class="btn btn-primary" onclick="openCertModal()">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Add Certification
+      </button>
+    </div>
+    <div id="certs-list"></div>
+  </div>
+
+  <!-- ── CONTACT PAGE ── -->
+  <div class="page" id="page-contact">
+    <div class="page-header">
+      <div class="page-title">Contact</div>
+      <div class="page-sub">Links and target companies shown in the contact section</div>
+    </div>
+    <div class="panel">
+      <div class="panel-title">Social Links</div>
+      <div class="form-row full"><div class="field"><label>GitHub URL</label><input id="f-github" placeholder="https://github.com/Saad-xd" oninput="markDirty()"></div></div>
+      <div class="form-row full"><div class="field"><label>LinkedIn URL</label><input id="f-linkedin" placeholder="https://linkedin.com/in/..." oninput="markDirty()"></div></div>
+      <div class="form-row full"><div class="field"><label>Email Address</label><input id="f-email" placeholder="your@email.com" oninput="markDirty()"></div></div>
+      <div class="form-row full"><div class="field"><label>WhatsApp Number (with country code)</label><input id="f-whatsapp" placeholder="966XXXXXXXXX" oninput="markDirty()"></div></div>
+    </div>
+    <div class="panel">
+      <div class="panel-title">Target Companies</div>
+      <div id="targets-tags-editor" class="tags-editor"></div>
+      <div class="tag-add-row">
+        <input id="target-input" placeholder="Add company name..." onkeydown="if(event.key==='Enter')addTarget()">
+        <button class="btn btn-ghost btn-sm" onclick="addTarget()">Add</button>
+      </div>
+    </div>
+  </div>
+
+</main>
+</div>
+
+<!-- SAVE BAR -->
+<div class="save-bar" id="save-bar">
+  <span class="save-status">You have unsaved changes</span>
+  <button class="btn btn-ghost btn-sm" onclick="loadData()">Discard</button>
+  <button class="btn btn-primary btn-sm" onclick="saveAll()">Save changes</button>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">✓ Saved successfully</div>
+
+<!-- PROJECT MODAL -->
+<div class="modal-overlay hidden" id="project-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="pm-title">Add Project</div>
+      <button class="modal-close" onclick="closeModal('project-modal')">×</button>
+    </div>
+    <input type="hidden" id="pm-id">
+    <div class="form-row">
+      <div class="field"><label>Tag Label</label><input id="pm-tag" placeholder="SCADA"></div>
+      <div class="field">
+        <label>Tag Color</label>
+        <select id="pm-tagClass">
+          <option value="tag-scada">Blue — SCADA</option>
+          <option value="tag-solar">Amber — Solar</option>
+          <option value="tag-panel">Green — Control Panel</option>
+          <option value="tag-maint">Purple — Maintenance</option>
+          <option value="tag-academic">Red — Academic</option>
+          <option value="tag-web">Lime — Web Dev</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-row full"><div class="field"><label>Project Title</label><input id="pm-title-f" placeholder="Project name"></div></div>
+    <div class="form-row full"><div class="field"><label>Description</label><textarea id="pm-desc" rows="4" placeholder="Describe the project..."></textarea></div></div>
+    <div class="field" style="margin-bottom:12px">
+      <label>Chips / Tags (comma separated)</label>
+      <input id="pm-chips" placeholder="Tag1, Tag2, Tag3">
+    </div>
+    <div class="field" style="margin-bottom:12px">
+      <label>Image Path (optional)</label>
+      <input id="pm-img" placeholder="images/project.jpg">
+    </div>
+    <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:20px">
+      <button class="btn btn-ghost" onclick="closeModal('project-modal')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveProject()">Save Project</button>
+    </div>
+  </div>
+</div>
+
+<!-- SKILL MODAL -->
+<div class="modal-overlay hidden" id="skill-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="sm-title">Add Skill Group</div>
+      <button class="modal-close" onclick="closeModal('skill-modal')">×</button>
+    </div>
+    <input type="hidden" id="sm-idx">
+    <div class="form-row full"><div class="field"><label>Group Name</label><input id="sm-group" placeholder="e.g. SCADA & Automation"></div></div>
+    <div class="field" style="margin-bottom:16px">
+      <label>Skills (comma separated)</label>
+      <input id="sm-tags" placeholder="Skill 1, Skill 2, Skill 3">
+    </div>
+    <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:20px">
+      <button class="btn btn-ghost" onclick="closeModal('skill-modal')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveSkillGroup()">Save Group</button>
+    </div>
+  </div>
+</div>
+
+<!-- CERT MODAL -->
+<div class="modal-overlay hidden" id="cert-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="cm-title">Add Certification</div>
+      <button class="modal-close" onclick="closeModal('cert-modal')">×</button>
+    </div>
+    <input type="hidden" id="cm-idx">
+    <div class="form-row">
+      <div class="field"><label>Icon (emoji)</label><input id="cm-icon" placeholder="🏆" maxlength="4"></div>
+      <div class="field"><label>Certificate Name</label><input id="cm-name" placeholder="SOLIDWORKS Certified Professional"></div>
+    </div>
+    <div class="form-row full"><div class="field"><label>Issuer</label><input id="cm-issuer" placeholder="CSWP · Dassault Systèmes"></div></div>
+    <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:20px">
+      <button class="btn btn-ghost" onclick="closeModal('cert-modal')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveCert()">Save</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const KEY = 'portfolio_data';
+
+const DEFAULT = {
+  profile:{
+    name:"Mohamed Saad Elzarif",role:"Automation & Control Engineer",
+    location:"Riyadh, Saudi Arabia",company:"Hossam El-Din Co.",
+    companyPeriod:"March 2025 — Present",gpa:"3.53",
+    university:"Mansoura University",
+    degree:"B.Sc. Mechatronics, Robotics and Automation Engineering",
+    about1:"I'm an Automation & Control Engineer with a background in Mechatronics, Robotics and Automation Engineering. I work at the intersection of industrial control systems, solar energy, and modern automation — designing and maintaining infrastructure that powers Saudi Arabia's agricultural and industrial landscape.",
+    about2:"Beyond engineering, I build web applications — from restaurant management systems to corporate websites — bringing digital skills to a field that still runs on paper.",
+    github:"https://github.com/Saad-xd",linkedin:"",email:"",whatsapp:"",
+    stat1:"103+",stat1label:"Sites maintained",
+    stat2:"20+",stat2label:"Solar sites deployed",
+    stat3:"3.53",stat3label:"University GPA"
+  },
+  skills:[
+    {group:"SCADA & Automation",tags:["Motorola ICC","Motorola ICC Pro","Hunter ICC","Hunter ACC","Irrigation SCADA","Alarm Management"]},
+    {group:"Electrical & Control",tags:["Control Panel Design","Panel Wiring","Relay Logic","Megger Testing","Cable Testing","Multimeter"]},
+    {group:"Solar Energy",tags:["Off-grid Systems","Solar Panel Installation","Battery Systems","Inverter Config","Site Execution"]},
+    {group:"Engineering Software",tags:["SOLIDWORKS","KeyShot","Cura","Orca Slicer","3D Printing"]},
+    {group:"Digital & Web",tags:["HTML / CSS / JS","Networking","CCTV Systems","POS Systems","GitHub"]},
+    {group:"Management",tags:["Procurement","BOQ Preparation","Team Supervision","Site Coordination","Supplier Evaluation"]}
+  ],
+  projects:[
+    {id:1,tag:"SCADA",tagClass:"tag-scada",title:"Riyadh Central Irrigation SCADA System",desc:"Large-scale SCADA monitoring and control system for central irrigation management across Riyadh. Real-time monitoring, alarm management, and system optimization using Motorola ICC and ICC Pro.",chips:["Motorola ICC","ICC Pro","Real-time Monitoring","Alarm Management"],img:""},
+    {id:2,tag:"Solar Energy",tagClass:"tag-solar",title:"Solar Powered Irrigation Sites",desc:"Designed and deployed off-grid solar energy systems across 20+ remote irrigation sites. Complete execution from solar panels and battery banks to inverter configuration.",chips:["20+ Sites","Off-grid","Solar Panels","Batteries","Inverters"],img:""},
+    {id:3,tag:"Control Panels",tagClass:"tag-panel",title:"Control Panel Manufacturing & Upgrading",desc:"Designed, assembled, wired, and tested industrial control panels from scratch. Implemented relay isolation and protection upgrades.",chips:["Panel Design","Relay Isolation","Wiring","Testing"],img:""},
+    {id:4,tag:"Maintenance",tagClass:"tag-maint",title:"Preventive Maintenance Program",desc:"Managed comprehensive preventive maintenance across 103+ irrigation sites. Megger testing, valve inspections, controller checks, field team coordination.",chips:["103+ Sites","Megger Testing","Valve Inspection","Team Lead"],img:""},
+    {id:5,tag:"Academic · A+",tagClass:"tag-academic",title:"Autonomous Mobile Robot (AMR)",desc:"Graduation project — warehouse automation robot achieving Grade A+. Navigation systems, sensor integration, and control algorithms.",chips:["Robotics","Navigation","Sensors","Control Algorithms"],img:""},
+    {id:6,tag:"Web Dev",tagClass:"tag-web",title:"Al Ghaid Restaurant Website",desc:"Full-featured restaurant website with digital menu, offers page, admin dashboard, PWA support, and WhatsApp ordering integration.",chips:["HTML/CSS/JS","PWA","Admin Dashboard","Cloudflare Pages"],img:""}
+  ],
+  certifications:[
+    {icon:"🏆",name:"SOLIDWORKS Certified Professional",issuer:"CSWP · Dassault Systèmes"},
+    {icon:"✅",name:"SOLIDWORKS Certified Associate",issuer:"CSWA · Dassault Systèmes"},
+    {icon:"⚙️",name:"Advanced Assemblies & Sheet Metal",issuer:"SOLIDWORKS · Dassault Systèmes"},
+    {icon:"🖨️",name:"Additive Manufacturing Associate",issuer:"3D Printing · Dassault Systèmes"},
+    {icon:"🔌",name:"PLC Basic Programming",issuer:"Industrial Automation"},
+    {icon:"💻",name:"UI/UX Front-End Development",issuer:"Web Development"}
+  ],
+  targets:["Saudi Aramco","SABIC","NEOM","Siemens KSA","ABB KSA","Schneider Electric"]
+};
+
+let data = {};
+let dirty = false;
+
+function getData(){ return JSON.parse(localStorage.getItem(KEY)||'null') || JSON.parse(JSON.stringify(DEFAULT)); }
+function setData(d){ localStorage.setItem(KEY, JSON.stringify(d)); }
+
+function loadData(){
+  data = getData();
+  fillProfile();
+  renderProjects();
+  renderSkills();
+  renderCerts();
+  fillContact();
+  dirty = false;
+  document.getElementById('save-bar').classList.remove('visible');
+}
+
+function fillProfile(){
+  const p = data.profile;
+  ['name','role','location','company','companyPeriod','gpa','university','degree','about1','about2','stat1','stat1label','stat2','stat2label','stat3','stat3label'].forEach(k=>{
+    const el = document.getElementById('f-'+k);
+    if(el) el.value = p[k]||'';
+  });
+  document.getElementById('s-stat1').textContent = p.stat1||'—';
+  document.getElementById('s-stat1l').textContent = p.stat1label||'—';
+  document.getElementById('s-stat2').textContent = p.stat2||'—';
+  document.getElementById('s-stat2l').textContent = p.stat2label||'—';
+  document.getElementById('s-stat3').textContent = p.stat3||'—';
+  document.getElementById('s-stat3l').textContent = p.stat3label||'—';
+}
+
+function fillContact(){
+  const p = data.profile;
+  ['github','linkedin','email','whatsapp'].forEach(k=>{
+    const el = document.getElementById('f-'+k);
+    if(el) el.value = p[k]||'';
+  });
+  renderTargets();
+}
+
+// ── PROJECTS ──
+function renderProjects(){
+  const list = document.getElementById('projects-list');
+  list.innerHTML = '';
+  (data.projects||[]).forEach((p,i)=>{
+    const div = document.createElement('div');
+    div.className='list-item';
+    div.innerHTML=`
+      <div style="width:36px;height:36px;border-radius:8px;background:var(--accent-dim);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;color:var(--accent);flex-shrink:0">${i+1}</div>
+      <div class="list-item-body">
+        <div class="list-item-title">${p.title}</div>
+        <div class="list-item-sub">${p.tag} · ${(p.chips||[]).slice(0,3).join(', ')}</div>
+      </div>
+      <div class="list-item-actions">
+        <button class="btn btn-ghost btn-sm" onclick="editProject(${i})">Edit</button>
+        <button class="btn btn-danger btn-sm" onclick="deleteProject(${i})">Delete</button>
+      </div>`;
+    list.appendChild(div);
+  });
+}
+
+function openProjectModal(idx){
+  document.getElementById('pm-id').value = idx !== undefined ? idx : '';
+  document.getElementById('pm-title').textContent = idx !== undefined ? 'Edit Project' : 'Add Project';
+  if(idx !== undefined){
+    const p = data.projects[idx];
+    document.getElementById('pm-tag').value = p.tag||'';
+    document.getElementById('pm-tagClass').value = p.tagClass||'tag-scada';
+    document.getElementById('pm-title-f').value = p.title||'';
+    document.getElementById('pm-desc').value = p.desc||'';
+    document.getElementById('pm-chips').value = (p.chips||[]).join(', ');
+    document.getElementById('pm-img').value = p.img||'';
+  } else {
+    ['pm-tag','pm-title-f','pm-desc','pm-chips','pm-img'].forEach(id=>document.getElementById(id).value='');
+    document.getElementById('pm-tagClass').value = 'tag-scada';
+  }
+  document.getElementById('project-modal').classList.remove('hidden');
+}
+
+function editProject(i){ openProjectModal(i); }
+
+function deleteProject(i){
+  if(!confirm('Delete this project?')) return;
+  data.projects.splice(i,1);
+  renderProjects();
+  markDirty();
+}
+
+function saveProject(){
+  const idx = document.getElementById('pm-id').value;
+  const p = {
+    id: Date.now(),
+    tag: document.getElementById('pm-tag').value,
+    tagClass: document.getElementById('pm-tagClass').value,
+    title: document.getElementById('pm-title-f').value,
+    desc: document.getElementById('pm-desc').value,
+    chips: document.getElementById('pm-chips').value.split(',').map(s=>s.trim()).filter(Boolean),
+    img: document.getElementById('pm-img').value
+  };
+  if(idx !== '') data.projects[parseInt(idx)] = p;
+  else data.projects.push(p);
+  renderProjects();
+  closeModal('project-modal');
+  markDirty();
+}
+
+// ── SKILLS ──
+function renderSkills(){
+  const list = document.getElementById('skills-list');
+  list.innerHTML = '';
+  (data.skills||[]).forEach((s,i)=>{
+    const div = document.createElement('div');
+    div.className = 'list-item';
+    div.innerHTML=`
+      <div class="list-item-body">
+        <div class="list-item-title">${s.group}</div>
+        <div class="list-item-sub">${(s.tags||[]).join(' · ')}</div>
+      </div>
+      <div class="list-item-actions">
+        <button class="btn btn-ghost btn-sm" onclick="openSkillModal(${i})">Edit</button>
+        <button class="btn btn-danger btn-sm" onclick="deleteSkill(${i})">Delete</button>
+      </div>`;
+    list.appendChild(div);
+  });
+}
+
+function openSkillModal(idx){
+  document.getElementById('sm-idx').value = idx !== undefined ? idx : '';
+  document.getElementById('sm-title').textContent = idx !== undefined ? 'Edit Skill Group' : 'Add Skill Group';
+  if(idx !== undefined){
+    const s = data.skills[idx];
+    document.getElementById('sm-group').value = s.group||'';
+    document.getElementById('sm-tags').value = (s.tags||[]).join(', ');
+  } else {
+    document.getElementById('sm-group').value = '';
+    document.getElementById('sm-tags').value = '';
+  }
+  document.getElementById('skill-modal').classList.remove('hidden');
+}
+
+function deleteSkill(i){ if(!confirm('Delete?')) return; data.skills.splice(i,1); renderSkills(); markDirty(); }
+
+function saveSkillGroup(){
+  const idx = document.getElementById('sm-idx').value;
+  const s = {
+    group: document.getElementById('sm-group').value,
+    tags: document.getElementById('sm-tags').value.split(',').map(t=>t.trim()).filter(Boolean)
+  };
+  if(idx !== '') data.skills[parseInt(idx)] = s;
+  else data.skills.push(s);
+  renderSkills();
+  closeModal('skill-modal');
+  markDirty();
+}
+
+// ── CERTS ──
+function renderCerts(){
+  const list = document.getElementById('certs-list');
+  list.innerHTML = '';
+  (data.certifications||[]).forEach((c,i)=>{
+    const div = document.createElement('div');
+    div.className = 'list-item';
+    div.innerHTML=`
+      <div style="font-size:24px;flex-shrink:0;width:36px;text-align:center">${c.icon}</div>
+      <div class="list-item-body">
+        <div class="list-item-title">${c.name}</div>
+        <div class="list-item-sub">${c.issuer}</div>
+      </div>
+      <div class="list-item-actions">
+        <button class="btn btn-ghost btn-sm" onclick="openCertModal(${i})">Edit</button>
+        <button class="btn btn-danger btn-sm" onclick="deleteCert(${i})">Delete</button>
+      </div>`;
+    list.appendChild(div);
+  });
+}
+
+function openCertModal(idx){
+  document.getElementById('cm-idx').value = idx !== undefined ? idx : '';
+  document.getElementById('cm-title').textContent = idx !== undefined ? 'Edit Certification' : 'Add Certification';
+  if(idx !== undefined){
+    const c = data.certifications[idx];
+    document.getElementById('cm-icon').value = c.icon||'';
+    document.getElementById('cm-name').value = c.name||'';
+    document.getElementById('cm-issuer').value = c.issuer||'';
+  } else {
+    ['cm-icon','cm-name','cm-issuer'].forEach(id=>document.getElementById(id).value='');
+  }
+  document.getElementById('cert-modal').classList.remove('hidden');
+}
+
+function deleteCert(i){ if(!confirm('Delete?')) return; data.certifications.splice(i,1); renderCerts(); markDirty(); }
+
+function saveCert(){
+  const idx = document.getElementById('cm-idx').value;
+  const c = {
+    icon: document.getElementById('cm-icon').value||'📜',
+    name: document.getElementById('cm-name').value,
+    issuer: document.getElementById('cm-issuer').value
+  };
+  if(idx !== '') data.certifications[parseInt(idx)] = c;
+  else data.certifications.push(c);
+  renderCerts();
+  closeModal('cert-modal');
+  markDirty();
+}
+
+// ── TARGETS ──
+function renderTargets(){
+  const box = document.getElementById('targets-tags-editor');
+  box.innerHTML = '';
+  (data.targets||[]).forEach((t,i)=>{
+    const pill = document.createElement('span');
+    pill.className = 'tag-pill';
+    pill.innerHTML = `${t}<button onclick="removeTarget(${i})" title="Remove">×</button>`;
+    box.appendChild(pill);
+  });
+}
+
+function addTarget(){
+  const inp = document.getElementById('target-input');
+  const val = inp.value.trim();
+  if(!val) return;
+  if(!data.targets) data.targets=[];
+  data.targets.push(val);
+  inp.value='';
+  renderTargets();
+  markDirty();
+}
+
+function removeTarget(i){ data.targets.splice(i,1); renderTargets(); markDirty(); }
+
+// ── SAVE ──
+function markDirty(){
+  dirty = true;
+  document.getElementById('save-bar').classList.add('visible');
+  const p = data.profile;
+  document.getElementById('s-stat1').textContent = document.getElementById('f-stat1').value || p.stat1;
+  document.getElementById('s-stat2').textContent = document.getElementById('f-stat2').value || p.stat2;
+  document.getElementById('s-stat3').textContent = document.getElementById('f-stat3').value || p.stat3;
+}
+
+function saveAll(){
+  const p = data.profile;
+  ['name','role','location','company','companyPeriod','gpa','university','degree','about1','about2',
+   'stat1','stat1label','stat2','stat2label','stat3','stat3label',
+   'github','linkedin','email','whatsapp'].forEach(k=>{
+    const el = document.getElementById('f-'+k);
+    if(el) p[k] = el.value;
+  });
+  setData(data);
+  dirty = false;
+  document.getElementById('save-bar').classList.remove('visible');
+  fillProfile();
+  const t = document.getElementById('toast');
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2500);
+}
+
+// ── NAV ──
+function showPage(name){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  document.getElementById('page-'+name).classList.add('active');
+  event.currentTarget.classList.add('active');
+}
+
+function closeModal(id){ document.getElementById(id).classList.add('hidden'); }
+
+document.querySelectorAll('.modal-overlay').forEach(m=>{
+  m.addEventListener('click',e=>{ if(e.target===m) m.classList.add('hidden'); });
+});
+
+loadData();
+</script>
+</body>
+</html>
