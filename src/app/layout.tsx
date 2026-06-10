@@ -6,7 +6,27 @@ const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
   title: 'Mohamed Saad Elzarif — Automation & Control Engineer',
-  description: 'Professional portfolio of Mohamed Saad Elzarif, Automation & Control Engineer based in Riyadh, Saudi Arabia.',
+  description:
+    'Automation & Control Engineer in Riyadh, Saudi Arabia. Specializing in SCADA systems (Motorola ICC/ICC Pro), irrigation automation across 103+ sites, solar energy integration, and industrial control panel design.',
+  keywords: [
+    'Automation Engineer', 'Control Engineer', 'SCADA Engineer',
+    'Mechatronics', 'Riyadh', 'Saudi Arabia', 'Motorola ICC',
+    'Solar Energy', 'Control Panels', 'SOLIDWORKS', 'PLC',
+  ],
+  authors: [{ name: 'Mohamed Saad Elzarif' }],
+  openGraph: {
+    title: 'Mohamed Saad Elzarif — Automation & Control Engineer',
+    description:
+      'SCADA systems, irrigation automation, solar energy, and control panel design. Based in Riyadh, Saudi Arabia.',
+    type: 'website',
+    locale: 'en_US',
+  },
+  twitter: {
+    card: 'summary',
+    title: 'Mohamed Saad Elzarif — Automation & Control Engineer',
+    description: 'SCADA · Solar Energy · Control Panels · Riyadh, KSA',
+  },
+  robots: { index: true, follow: true },
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

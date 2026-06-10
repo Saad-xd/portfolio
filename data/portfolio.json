@@ -4,17 +4,17 @@
     "role": "Automation & Control Engineer",
     "location": "Riyadh, Saudi Arabia",
     "company": "Hossam El-Din Co.",
-    "companyPeriod": "March 2025 \u2014 Present",
+    "companyPeriod": "March 2025 — Present",
     "gpa": "3.53",
     "university": "Mansoura University",
     "degree": "B.Sc. Mechatronics, Robotics and Automation Engineering",
-    "about1": "I'm an Automation & Control Engineer with a background in Mechatronics, Robotics and Automation Engineering. I work at the intersection of industrial control systems, solar energy, and modern automation \u2014 designing and maintaining infrastructure that powers Saudi Arabia's agricultural and industrial landscape.",
-    "about2": "Beyond engineering, I build web applications \u2014 from restaurant management systems to corporate websites \u2014 bringing digital skills to a field that still runs on paper.",
+    "about1": "I'm an Automation & Control Engineer with a background in Mechatronics, Robotics and Automation Engineering. I work at the intersection of industrial control systems, solar energy, and modern automation — designing and maintaining infrastructure that powers Saudi Arabia's agricultural and industrial landscape.",
+    "about2": "Beyond engineering, I build web applications — from restaurant management systems to corporate websites — bringing digital skills to a field that still runs on paper.",
     "github": "https://github.com/Saad-xd",
     "linkedin": "https://linkedin.com/in/mohamed-saad-824903231",
     "email": "mh.saad131466@gmail.com",
     "whatsapp": "966564961492",
-    "cvFile": "",
+    "cvFile": "/Mohamed_Saad_CV.pdf",
     "stat1": "103+",
     "stat1label": "Sites maintained",
     "stat2": "20+",
@@ -147,10 +147,10 @@
     },
     {
       "id": 5,
-      "tag": "Academic \u00b7 A+",
+      "tag": "Academic · A+",
       "tagClass": "academic",
       "title": "Autonomous Mobile Robot (AMR)",
-      "desc": "Graduation project \u2014 warehouse automation robot achieving Grade A+. Navigation systems, sensor integration, and control algorithms.",
+      "desc": "Graduation project — warehouse automation robot achieving Grade A+. Navigation systems, sensor integration, and control algorithms.",
       "chips": [
         "Robotics",
         "Navigation",
@@ -176,32 +176,32 @@
   ],
   "certifications": [
     {
-      "icon": "\ud83c\udfc6",
+      "icon": "🏆",
       "name": "SOLIDWORKS Certified Professional",
-      "issuer": "CSWP \u00b7 Dassault Syst\u00e8mes"
+      "issuer": "CSWP · Dassault Systèmes"
     },
     {
-      "icon": "\u2705",
+      "icon": "✅",
       "name": "SOLIDWORKS Certified Associate",
-      "issuer": "CSWA \u00b7 Dassault Syst\u00e8mes"
+      "issuer": "CSWA · Dassault Systèmes"
     },
     {
-      "icon": "\u2699\ufe0f",
+      "icon": "⚙️",
       "name": "Advanced Assemblies & Sheet Metal",
-      "issuer": "SOLIDWORKS \u00b7 Dassault Syst\u00e8mes"
+      "issuer": "SOLIDWORKS · Dassault Systèmes"
     },
     {
-      "icon": "\ud83d\udda8\ufe0f",
+      "icon": "🖨️",
       "name": "Additive Manufacturing Associate",
-      "issuer": "3D Printing \u00b7 Dassault Syst\u00e8mes"
+      "issuer": "3D Printing · Dassault Systèmes"
     },
     {
-      "icon": "\ud83d\udd0c",
+      "icon": "🔌",
       "name": "PLC Basic Programming",
       "issuer": "Industrial Automation"
     },
     {
-      "icon": "\ud83d\udcbb",
+      "icon": "💻",
       "name": "UI/UX Front-End Development",
       "issuer": "Web Development"
     }
