@@ -22,7 +22,7 @@ const s: Record<string, React.CSSProperties> = {
 
 type Section = 'profile'|'projects'|'skills'|'certifications'|'contact'
 
-export default function AdminDashboard({ password }: { password: string }) {
+export default function AdminDashboard({ password, onLogout }: { password: string; onLogout?: () => void }) {
   const [page, setPage]     = useState<Section>('profile')
   const [data, setData]     = useState<any>(null)
   const [dirty, setDirty]   = useState(false)
@@ -36,7 +36,7 @@ export default function AdminDashboard({ password }: { password: string }) {
   useEffect(() => { loadData() }, [])
 
   async function loadData() {
-    const res = await fetch(`/api/update?password=${encodeURIComponent(password)}`)
+    const res = await fetch('/api/update', { headers: { 'x-admin-password': password } })
     const d   = await res.json()
     setData(d)
     setProf(d.profile || {})
@@ -48,8 +48,8 @@ export default function AdminDashboard({ password }: { password: string }) {
     const payload = { ...data, profile: { ...data.profile, ...prof } }
     const res = await fetch('/api/update', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ password, data: payload }),
+      headers: { 'Content-Type': 'application/json', 'x-admin-password': password },
+      body: JSON.stringify({ data: payload }),
     })
     setSaving(false)
     if (res.ok) { showToast('✓ Saved & deployed!'); setDirty(false); setData(payload) }
@@ -133,6 +133,14 @@ export default function AdminDashboard({ password }: { password: string }) {
           <p style={{ fontSize:10, color:'#5A6278', marginTop:8, textAlign:'center', lineHeight:1.5 }}>
             Changes save directly to GitHub
           </p>
+          {onLogout && (
+            <button
+              onClick={onLogout}
+              style={{ width:'100%', marginTop:10, background:'rgba(255,92,92,0.12)', border:'0.5px solid rgba(255,92,92,0.25)', color:'#FF5C5C', fontSize:12, fontWeight:600, padding:8, borderRadius:7, cursor:'pointer' }}
+            >
+              Logout
+            </button>
+          )}
         </div>
       </aside>
 
