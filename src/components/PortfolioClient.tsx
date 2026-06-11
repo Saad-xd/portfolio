@@ -1,4 +1,5 @@
 'use client'
+import { useState } from 'react'
 
 interface PortfolioData {
   profile: Record<string, string>
@@ -10,6 +11,7 @@ interface PortfolioData {
 
 export default function PortfolioClient({ data }: { data: PortfolioData }) {
   const { profile: p, skills, projects, certifications, targets } = data
+  const [menuOpen, setMenuOpen] = useState(false)
   const nameParts = (p.name || '').trim().split(' ')
   const lastName  = nameParts.length > 1 ? nameParts[nameParts.length - 1] : ''
   const firstName = nameParts.length > 1 ? nameParts.slice(0, -1).join(' ') : nameParts[0]
@@ -25,7 +27,24 @@ export default function PortfolioClient({ data }: { data: PortfolioData }) {
           ))}
         </ul>
         <a href="#contact" className="nav-cta">Hire me</a>
+        <button
+          className={`hamburger ${menuOpen ? 'open' : ''}`}
+          onClick={() => setMenuOpen(!menuOpen)}
+          aria-label="Toggle menu"
+        >
+          <span /><span /><span />
+        </button>
       </nav>
+
+      {/* MOBILE MENU */}
+      <div className={`mobile-menu ${menuOpen ? 'open' : ''}`}>
+        {['about','skills','projects','certifications'].map(s => (
+          <a key={s} href={`#${s}`} onClick={() => setMenuOpen(false)}>
+            {s.charAt(0).toUpperCase()+s.slice(1)}
+          </a>
+        ))}
+        <a href="#contact" onClick={() => setMenuOpen(false)}>Hire me</a>
+      </div>
 
       {/* HERO */}
       <section id="hero">
