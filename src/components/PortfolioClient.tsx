@@ -21,6 +21,7 @@ function ImageSlider({ images, title, onOpen }: { images: string[]; title: strin
   return (
     <div className="slider">
       <img
+        key={images[idx]}
         className="project-img clickable"
         src={images[idx]}
         alt={`${title} ${idx+1}`}
@@ -61,7 +62,7 @@ function Lightbox({ images, startIdx, onClose }: { images: string[]; startIdx: n
   return (
     <div className="lightbox" onClick={onClose}>
       <button className="lightbox-close" onClick={onClose}>×</button>
-      <img src={images[idx]} alt="" onClick={e => e.stopPropagation()} />
+      <img key={images[idx]} src={images[idx]} alt="" onClick={e => e.stopPropagation()} />
       {images.length > 1 && (
         <>
           <button className="lightbox-btn lightbox-prev" onClick={e => { e.stopPropagation(); setIdx((idx - 1 + images.length) % images.length) }}>‹</button>
