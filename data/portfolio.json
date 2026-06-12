@@ -193,6 +193,37 @@
       "images": [
         "/images/1781284670914_screenshot-1781283885280.jpg"
       ]
+    },
+    {
+      "tag": "Mechanical Design",
+      "tagClass": "maint",
+      "title": "Illuminated Moving Trophy Design & Manufacturing for Al Nassr Club",
+      "desc": "Designed and manufactured a custom illuminated moving trophy inspired by Al Nassr Club identity. The project covered the complete engineering lifecycle including concept development, 3D modeling in SolidWorks, laser cutting preparation, metal fabrication, assembly, LED integration, and final finishing.\n\nThe trophy was developed using a Design for Manufacturing (DFM) approach to ensure structural stability, ease of fabrication, and premium visual appearance. The final product combines precision sheet metal fabrication, custom branding elements, and integrated lighting to create a professional display piece suitable for exhibitions, offices, and VIP areas.\n\nResponsibilities included CAD design, manufacturing supervision, assembly, quality inspection, and final product delivery.",
+      "chips": [
+        "SolidWorks",
+        "Product Design",
+        "Mechanical Design",
+        "Sheet Metal",
+        "Laser Cutting",
+        "Manufacturing",
+        "Fabrication",
+        "DFM",
+        "3D Modeling",
+        "LED Integration",
+        "Project Management",
+        "Quality Control"
+      ],
+      "img": "",
+      "images": [
+        "/images/1781287085725_WhatsApp_Image_2026-06-10_at_10.59.03_PM__3_.jpg",
+        "/images/1781287089876_WhatsApp_Image_2026-06-10_at_10.59.03_PM__2_.jpg",
+        "/images/1781287091818_WhatsApp_Image_2026-06-10_at_10.59.03_PM__1_.jpg",
+        "/images/1781287094047_WhatsApp_Image_2026-06-10_at_10.59.04_PM__1_.jpg",
+        "/images/1781287096780_WhatsApp_Image_2026-06-10_at_10.59.04_PM.jpg",
+        "/images/1781287099506_WhatsApp_Image_2026-06-10_at_10.59.06_PM__1_.jpg",
+        "/images/1781287101392_WhatsApp_Image_2026-06-10_at_10.59.06_PM.jpg"
+      ],
+      "id": 1781287235810
     }
   ],
   "certifications": [
