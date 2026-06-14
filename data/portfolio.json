@@ -306,6 +306,32 @@
         "/images/1781437331147_IMG_1414.jpg"
       ],
       "id": 1781437334312
+    },
+    {
+      "tag": "Academic Project (A+)",
+      "tagClass": "scada",
+      "title": "Vertical Rotary Car Parking System",
+      "desc": "Designed and developed a Vertical Rotary Car Parking System as part of a multidisciplinary engineering project. As the Mechanical Design Engineer, I was responsible for the complete mechanical design process including concept development, chassis design, parking platform design, gear and transmission system integration, structural calculations, stress analysis, 3D modeling using SolidWorks, manufacturing drawings, and design optimization for safety, reliability, and manufacturability. The system was developed to maximize parking capacity while minimizing the required ground area through an automated rotary mechanism integrated with smart control and RFID access technologies.",
+      "chips": [
+        "Mechanical Design",
+        "SolidWorks",
+        "Product Development",
+        "Automation",
+        "Smart Parking",
+        "Structural Analysis",
+        "DFM",
+        "Manufacturing Drawings",
+        "Stress Analysis",
+        "3D Modeling",
+        "Engineering Design",
+        "Mechatronics"
+      ],
+      "img": "",
+      "images": [
+        "/images/1781438044008_IMG_1441.jpg",
+        "/images/1781438047112_IMG_1442.jpg"
+      ],
+      "id": 1781438069689
     }
   ],
   "certifications": [
