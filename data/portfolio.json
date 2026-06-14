@@ -275,6 +275,33 @@
         "/images/1781436430154_IMG_1424.jpg"
       ],
       "id": 1781436652813
+    },
+    {
+      "tag": "Medical Robotics",
+      "tagClass": "scada",
+      "title": "Biomix Medical Service Robot",
+      "desc": "Biomix is an innovative medical service robot developed by a multidisciplinary team at Mansoura University to support healthcare facilities and reduce direct human contact. As the Mechanical Design Engineer, I was responsible for the robot’s mechanical architecture, 3D modeling, chassis design, component integration, structural analysis, manufacturing drawings, and design optimization for stability, mobility, and maintenance. The project combined robotics, automation, embedded systems, and healthcare technology to create a practical solution for hospital environments.",
+      "chips": [
+        "Mechanical Design",
+        "SolidWorks",
+        "Medical Robotics",
+        "3D Modeling",
+        "Product Development",
+        "Robotics",
+        "DFM",
+        "Mechanical Engineering",
+        "Prototype Development",
+        "Manufacturing Drawings",
+        "Automation",
+        "Teamwork"
+      ],
+      "img": "",
+      "images": [
+        "/images/1781437326162_IMG_2117.jpg",
+        "/images/1781437328474_IMG_4294.jpg",
+        "/images/1781437331147_IMG_1414.jpg"
+      ],
+      "id": 1781437334312
     }
   ],
   "certifications": [
