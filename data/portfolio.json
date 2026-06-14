@@ -242,6 +242,39 @@
         "/images/1781287101392_WhatsApp_Image_2026-06-10_at_10.59.06_PM.jpg"
       ],
       "id": 1781287235810
+    },
+    {
+      "tag": "Graduation Project",
+      "tagClass": "scada",
+      "title": "Plowing and Shoveling Soil Robot",
+      "desc": "Designed and developed a Wi-Fi controlled agricultural robot for plowing and soil preparation using ESP8266 NodeMCU and ESP32-CAM. The robot provides remote control, live video streaming, adjustable cultivation depth, and automated soil preparation through integrated mechanical, electronic, and embedded systems.",
+      "chips": [
+        "ESP8266",
+        "ESP32-CAM",
+        "IoT",
+        "Automation",
+        "Embedded Systems",
+        "WiFi Control",
+        "Arduino",
+        "SolidWorks",
+        "Mechanical Design",
+        "Agricultural Robot"
+      ],
+      "img": "",
+      "images": [
+        "/images/1781436407638_IMG_1427.jpg",
+        "/images/1781436411458_IMG_1428.jpg",
+        "/images/1781436413481_IMG_1434.jpg",
+        "/images/1781436415649_IMG_1433.jpg",
+        "/images/1781436417699_IMG_1430.jpg",
+        "/images/1781436419908_IMG_1432.jpg",
+        "/images/1781436421874_IMG_1431.jpg",
+        "/images/1781436423809_IMG_1429.jpg",
+        "/images/1781436426535_IMG_1426.jpg",
+        "/images/1781436428480_IMG_1425.jpg",
+        "/images/1781436430154_IMG_1424.jpg"
+      ],
+      "id": 1781436652813
     }
   ],
   "certifications": [
