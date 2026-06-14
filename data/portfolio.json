@@ -312,10 +312,10 @@
   "targets": [
     "Saudi Aramco",
     "SABIC",
-    "NEOM",
     "Siemens KSA",
     "ABB KSA",
-    "Schneider Electric"
+    "Schneider Electric",
+    ""
   ],
   "sectionsVisible": {
     "about": true,
