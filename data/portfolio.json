@@ -183,7 +183,7 @@
     },
     {
       "id": 5,
-      "tag": "Academic · A+",
+      "tag": "Academic Project (A+)",
       "tagClass": "academic",
       "title": "Autonomous Mobile Robot (AMR)",
       "desc": "Graduation project — warehouse automation robot achieving Grade A+. Navigation systems, sensor integration, and control algorithms.",
@@ -194,7 +194,11 @@
         "Control Algorithms"
       ],
       "visible": true,
-      "images": []
+      "images": [
+        "/images/1781437703452_IMG_1439.jpg",
+        "/images/1781437706472_IMG_1438.jpg",
+        "/images/1781437708616_B2B98041-56BD-4A97-A732-9FA4C485F0F0.jpg"
+      ]
     },
     {
       "id": 6,
